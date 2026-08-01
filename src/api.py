@@ -57,7 +57,7 @@ try:
         print("⚠️ Warning: best_precheck_model.onnx tidak ditemukan di HF repo. Precheck akan dilewati (semua gambar dianggap valid).")
 
     print("⏳ Memuat model Utama Hybrid (ONNX)...")
-    hybrid_path = download_model_from_hf("hybrid_vit_efficientnet_brain_fp32.onnx")
+    hybrid_path = download_model_from_hf("hybrid_vit_efficientnet_brain_fp16.onnx")
     if hybrid_path:
         hybrid_session = ort.InferenceSession(hybrid_path, providers=["CPUExecutionProvider"])
         print(f"💾 Sukses memuat model Classifier utama dari {hybrid_path}")
