@@ -534,5 +534,3 @@ btnStart?.addEventListener("click", () => {
         reportSection.scrollIntoView({ behavior: 'smooth' });
     };
 });
-
-
