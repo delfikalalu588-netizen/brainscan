@@ -1,4 +1,3 @@
-
 import os
 
 from fastapi import FastAPI
@@ -33,6 +32,15 @@ app.add_middleware(
 # ─────────────────────────────────────────────────────────────
 os.makedirs(os.path.join(OUTPUT_DIR, "figures"), exist_ok=True)
 os.makedirs("temp_uploads", exist_ok=True)
+
+# ─────────────────────────────────────────────────────────────
+# 3b. Health check -- beberapa platform hosting (SnapDeploy, dll)
+#     rutin ngecek endpoint ini buat mastiin container sehat
+# ─────────────────────────────────────────────────────────────
+@app.get("/health")
+@app.get("/healthz")
+def health_check():
+    return {"status": "ok"}
 
 # ─────────────────────────────────────────────────────────────
 # 4. Sambungkan semua endpoint dari api.py
