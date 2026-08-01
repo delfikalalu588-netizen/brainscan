@@ -49,7 +49,7 @@ hybrid_session = None
 
 try:
     print("⏳ Memuat model Precheck (ONNX)...")
-    precheck_path = download_model_from_hf("best_precheck_model.onnx")
+    precheck_path = download_model_from_hf("best_precheck_model_fp16.onnx")
     if precheck_path:
         precheck_session = ort.InferenceSession(precheck_path, providers=["CPUExecutionProvider"])
         print(f"💾 Sukses memuat model Precheck dari {precheck_path}")
