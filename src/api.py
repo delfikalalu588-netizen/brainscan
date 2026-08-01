@@ -1,4 +1,3 @@
-
 import os
 import io
 import base64
@@ -43,13 +42,19 @@ def softmax(x: np.ndarray) -> np.ndarray:
 # ─────────────────────────────────────────────────────────────
 # Muat model-model AI (ONNX Runtime session) secara global, SEKALI,
 # saat modul ini diimpor (yaitu saat app.py memanggil `from src.api import router`)
+#
+# PENTING: pakai FP32 untuk KEDUA model (bukan FP16/INT8) --
+# FP16 hybrid terbukti gagal di-load (mixed dtype bug di graph ONNX-nya),
+# dan INT8 (baik precheck maupun hybrid) terbukti akurasinya jatuh drastis
+# saat divalidasi. FP32 adalah satu-satunya versi yang sudah terverifikasi
+# 100% cocok dengan model PyTorch aslinya.
 # ─────────────────────────────────────────────────────────────
 precheck_session = None
 hybrid_session = None
 
 try:
     print("⏳ Memuat model Precheck (ONNX)...")
-    precheck_path = download_model_from_hf("best_precheck_model_fp16.onnx")
+    precheck_path = download_model_from_hf("best_precheck_model.onnx")
     if precheck_path:
         precheck_session = ort.InferenceSession(precheck_path, providers=["CPUExecutionProvider"])
         print(f"💾 Sukses memuat model Precheck dari {precheck_path}")
@@ -57,7 +62,7 @@ try:
         print("⚠️ Warning: best_precheck_model.onnx tidak ditemukan di HF repo. Precheck akan dilewati (semua gambar dianggap valid).")
 
     print("⏳ Memuat model Utama Hybrid (ONNX)...")
-    hybrid_path = download_model_from_hf("hybrid_vit_efficientnet_brain_fp16.onnx")
+    hybrid_path = download_model_from_hf("hybrid_vit_efficientnet_brain_fp32.onnx")
     if hybrid_path:
         hybrid_session = ort.InferenceSession(hybrid_path, providers=["CPUExecutionProvider"])
         print(f"💾 Sukses memuat model Classifier utama dari {hybrid_path}")
