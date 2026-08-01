@@ -2,7 +2,7 @@
 // "https://brainscan-api-xxxxxxxxxx.asia-southeast2.run.app"
 // (dikosongkan/'' berarti pakai origin yang sama, buat testing lokal
 // saat frontend & backend jalan bareng di satu server)
-const API_BASE_URL = "https://GANTI-DENGAN-URL-CLOUD-RUN-KAMU.run.app";
+const API_BASE_URL = "";
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnStart = document.getElementById("btn-start");
