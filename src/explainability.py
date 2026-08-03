@@ -1,17 +1,3 @@
-"""
-explainability.py  (versi ONNX — tanpa torch)
-------------------------------------------------
-Menghasilkan heatmap "Peta Atensi Model" dari attention weight ViT layer
-terakhir. BUKAN Grad-CAM klasik (yang butuh backward pass/gradient,
-tidak didukung ONNX Runtime standar) — ini murni forward pass, membaca
-output kedua ('attention') dari model ONNX yang sudah di-re-export
-supaya menyertakan attention weight (lihat reexport_onnx_with_attention.py).
-
-Logika pengolahan attention (rata-rata head, ambil attention CLS->patch,
-reshape ke grid, resize, overlay) SAMA PERSIS dengan versi PyTorch
-sebelumnya — cuma sumber datanya dari ONNX Runtime, bukan torch tensor.
-"""
-
 import os
 import numpy as np
 import matplotlib
