@@ -1,20 +1,3 @@
-"""
-database.py
-------------
-Database dipisah dari backend (Render) — pakai Turso, bukan file SQLite
-lokal. Alasan: Render (seperti kebanyakan platform hosting compute)
-tidak menyimpan data secara permanen di disk lokalnya — hilang tiap
-kali service restart/redeploy.
-
-Turso dipilih karena protokolnya SQLite-compatible, jadi SEMUA query SQL
-di bawah ini (CREATE TABLE, INSERT, SELECT, ON CONFLICT) sama persis
-dengan versi sqlite3 biasa — cuma cara membuka koneksinya yang beda.
-
-Environment variable yang WAJIB di-set di Render (Settings > Environment):
-    TURSO_DATABASE_URL   -> contoh: libsql://nama-db-kamu.turso.io
-    TURSO_AUTH_TOKEN     -> token dari `turso db tokens create nama-db-kamu`
-"""
-
 import os
 import libsql_client
 
@@ -27,6 +10,7 @@ _client = None
 def get_client():
     """Membuat (atau reuse) satu koneksi client ke Turso. Dibuat sekali
     dan dipakai berulang (bukan buka-tutup tiap query), lebih efisien
+    
     untuk koneksi jaringan (HTTP) dibanding sqlite3.connect() lokal."""
     global _client
     if _client is None:
