@@ -42,12 +42,6 @@ def softmax(x: np.ndarray) -> np.ndarray:
 # ─────────────────────────────────────────────────────────────
 # Muat model-model AI (ONNX Runtime session) secara global, SEKALI,
 # saat modul ini diimpor (yaitu saat app.py memanggil `from src.api import router`)
-#
-# PENTING: pakai FP32 untuk KEDUA model (bukan FP16/INT8) --
-# FP16 hybrid terbukti gagal di-load (mixed dtype bug di graph ONNX-nya),
-# dan INT8 (baik precheck maupun hybrid) terbukti akurasinya jatuh drastis
-# saat divalidasi. FP32 adalah satu-satunya versi yang sudah terverifikasi
-# 100% cocok dengan model PyTorch aslinya.
 # ─────────────────────────────────────────────────────────────
 precheck_session = None
 hybrid_session = None
