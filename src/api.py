@@ -42,7 +42,27 @@ def softmax(x: np.ndarray) -> np.ndarray:
 # ─────────────────────────────────────────────────────────────
 # Muat model-model AI (ONNX Runtime session) secara global, SEKALI,
 # saat modul ini diimpor (yaitu saat app.py memanggil `from src.api import router`)
+#
+# PENTING: pakai FP32 untuk KEDUA model (bukan FP16/INT8) --
+# FP16 hybrid terbukti gagal di-load (mixed dtype bug di graph ONNX-nya),
+# dan INT8 (baik precheck maupun hybrid) terbukti akurasinya jatuh drastis
+# saat divalidasi. FP32 adalah satu-satunya versi yang sudah terverifikasi
+# 100% cocok dengan model PyTorch aslinya.
 # ─────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────
+# Opsi sesi ONNX Runtime yang menekan pemakaian RAM -- penting untuk
+# hosting dengan RAM terbatas (mis. 512MB free tier). Trade-off:
+# eksekusi sedikit lebih lambat, tapi puncak pemakaian RAM turun jauh.
+# ─────────────────────────────────────────────────────────────
+def _low_memory_session_options():
+    opts = ort.SessionOptions()
+    opts.enable_mem_pattern = False       # matikan pre-alokasi buffer besar
+    opts.enable_cpu_mem_arena = False     # matikan arena allocator (lebih hemat, tapi lebih lambat)
+    opts.intra_op_num_threads = 1         # 1 thread -- kurangi overhead memori per-thread
+    opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_BASIC
+    return opts
+
+
 precheck_session = None
 hybrid_session = None
 
@@ -50,7 +70,10 @@ try:
     print("⏳ Memuat model Precheck (ONNX)...")
     precheck_path = download_model_from_hf("best_precheck_model.onnx")
     if precheck_path:
-        precheck_session = ort.InferenceSession(precheck_path, providers=["CPUExecutionProvider"])
+        precheck_session = ort.InferenceSession(
+            precheck_path, sess_options=_low_memory_session_options(),
+            providers=["CPUExecutionProvider"],
+        )
         print(f"💾 Sukses memuat model Precheck dari {precheck_path}")
     else:
         print("⚠️ Warning: best_precheck_model.onnx tidak ditemukan di HF repo. Precheck akan dilewati (semua gambar dianggap valid).")
@@ -58,7 +81,10 @@ try:
     print("⏳ Memuat model Utama Hybrid (ONNX)...")
     hybrid_path = download_model_from_hf("hybrid_vit_efficientnet_brain_fp32.onnx")
     if hybrid_path:
-        hybrid_session = ort.InferenceSession(hybrid_path, providers=["CPUExecutionProvider"])
+        hybrid_session = ort.InferenceSession(
+            hybrid_path, sess_options=_low_memory_session_options(),
+            providers=["CPUExecutionProvider"],
+        )
         print(f"💾 Sukses memuat model Classifier utama dari {hybrid_path}")
     else:
         print("⚠️ Warning: hybrid_vit_efficientnet_brain_fp32.onnx tidak ditemukan di HF repo.")
