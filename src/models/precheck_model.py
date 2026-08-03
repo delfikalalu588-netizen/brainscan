@@ -1,16 +1,4 @@
-"""
-precheck_model.py
-------------------
-Model Pre-Check (gatekeeper) berbasis EfficientNet-B0.
 
-Sesuai proposal, salah satu kebaruan utama proyek ini adalah modul pre-check
-BERBASIS EfficientNet-B0 (bukan Vision Transformer) untuk memverifikasi bahwa
-citra yang diunggah benar-benar CT-Scan/MRI otak yang valid, sebelum diteruskan
-ke model klasifikasi utama (BrainHybridModel). Tujuannya mengurangi risiko
-"halusinasi" model saat menerima citra non-otak atau modalitas yang tidak sesuai.
-
-Klasifikasi biner: indeks 0 = Invalid, indeks 1 = Valid.
-"""
 
 import torch
 import torch.nn as nn
