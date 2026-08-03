@@ -1,18 +1,3 @@
-"""
-classifier_model.py
--------------------
-Arsitektur PERSIS SAMA dengan yang dipakai saat training di notebook
-(Hybrid_ViT_EfficientNet_Brain_Disease_FIXED.ipynb), supaya checkpoint
-hasil training (hybrid_vit_efficientnet_brain_best.pth) bisa di-load
-tanpa error "Missing/Unexpected key(s)".
-
-Arsitektur:
-  - EfficientNet-B3 (CNN backbone)        -> feature map lokal (1536 dim)
-  - Custom Vision Transformer (6 layer)    -> dibangun dari nol (bukan
-    ViT pretrained HuggingFace), beroperasi di atas feature map CNN
-  - Cross-Modal Attention Fusion           -> gabungkan fitur CNN + ViT
-  - Classifier Head: Linear -> GELU -> BatchNorm1d -> Dropout -> Linear
-"""
 
 import logging
 import torch
