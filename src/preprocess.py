@@ -1,15 +1,3 @@
-"""
-preprocess.py  (versi ONNX — tanpa torch/torchvision)
-------------------------------------------------------
-Backend sekarang full ONNX Runtime (biar ringan buat Render free tier),
-jadi preprocessing gambar ditulis ulang pakai PIL + numpy murni,
-menghasilkan array [1, 3, H, W] float32 — persis format yang dibutuhkan
-ONNX Runtime (menggantikan torchvision.transforms yang butuh torch).
-
-Statistik normalisasi & urutan operasi TETAP SAMA PERSIS dengan versi
-PyTorch sebelumnya, supaya hasil inference tidak berubah.
-"""
-
 import numpy as np
 from PIL import Image
 
