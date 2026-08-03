@@ -122,7 +122,7 @@ Pola visual yang dominan diidentifikasi sebagai: '{pattern}'.
     report += f"""
 
 3. TINGKAT KEYAKINAN (CONFIDENCE LEVEL ANALYSIS):
-* Model klasifikasi Vision Transformer (google/vit-base-patch16-224) mendeteksi tanda visual penyakit '{class_name}' dengan tingkat keyakinan {confidence:.2f}%.
+* Model klasifikasi Vision Transformer (Marksnb/brain-hybrid-efficientnet-vit) mendeteksi tanda visual penyakit '{class_name}' dengan tingkat keyakinan {confidence:.2f}%.
 * Keakuratan klasifikasi divalidasi oleh cross-attention map yang secara presisi mengunci koordinat lesi di {region}.
 
 4. REKOMENDASI PEMERIKSAAN LANJUTAN (RECOMMENDATIONS):"""
